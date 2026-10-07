@@ -28,3 +28,21 @@ def parent_matrix_constraint(parent, child):
             cmds.connectAttr(f'{decompose_matrix_node}.outputTranslate', f'{child}.translate')
             cmds.connectAttr(f'{decompose_matrix_node}.outputRotate', f'{child}.rotate')
             cmds.connectAttr(f'{decompose_matrix_node}.outputScale', f'{child}.scale')
+
+
+
+def module_hierarchie_Creation():
+    group_names = ["SETUP","inputs","guides","controls","rigNodes","joints","geo","helpers","outputs"]
+    parent_input = ["parent_input","parentGuide_input"]
+
+    input = "arm_L"
+
+    moduleName = cmds.createNode("transform", name = f'{input}_MOD')
+
+    for group_index in group_names:
+        if group_index == "inputs":
+            current_parent = cmds.createNode("transform", name = f'{input}_{group_index}', parent = moduleName)
+            for child_name in parent_input:
+                cmds.createNode("transform", name = f'{input}_{child_name}', parent = current_parent)           
+        else:
+            cmds.createNode("transform", name = f'{input}_{group_index}', parent = moduleName)
